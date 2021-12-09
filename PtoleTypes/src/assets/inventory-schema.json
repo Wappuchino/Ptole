@@ -1,6 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "$id": "https://example.com/inventory.schema.json",
   "title": "Generic inventory",
   "description": "An inventory containing items belonging to a player or other entity",
   "definitions": {
