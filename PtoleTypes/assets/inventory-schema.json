@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$id": "https://example.com/inventory.schema.json",
+  "title": "Generic inventory",
+  "description": "An inventory containing items belonging to a player or other entity",
+  "definitions": {
+    "ItemType": {
+      "title": "ItemType",
+      "description": "ItemType",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The local numerical id of the item type",
+          "type": "integer"
+        },
+        "name": {
+          "description": "The un-localized named of the item type",
+          "type": "string"
+        },
+        "description": {
+          "description": "The un-localized description or placeholder thereof",
+          "type": "string"
+        },
+        "subtypes": {
+          "description": "Subtypes of the item type",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemType"
+          }
+        }
+      }
+    },
+    "Item": {
+      "title": "Item",
+      "description": "Item",
+      "type": "object",
+      "properties": {
+        "itemType": {
+          "description": "The full numerical id of the item's type",
+          "type": "integer"
+        },
+        "amount": {
+          "description": "The quantity of the item, omit for single items",
+          "type": "number"
+        }
+      },
+      "required": ["itemType"]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "version": {
+      "description": "The current version of schema being used",
+      "type": "integer"
+    },
+    "itemTypes": {
+      "description": "The item types being described",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ItemType"
+      }
+    }
+  }
+}
