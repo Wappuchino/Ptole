@@ -1,12 +1,13 @@
-import { Stack, StackProps } from 'aws-cdk-lib/aws';
-import { Construct } from 'constructs';
-import { DatabaseCluster } from 'aws-cdk-lib/aws-docdb';
-import { Function, Runtime, Code } from 'aws-cdk-lib/aws-lambda';
-import { InstanceClass, InstanceSize, InstanceType, SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2';
+import {Stack, StackProps} from 'aws-cdk-lib';
+import {Construct} from 'constructs';
+import {AttributeType, Table} from 'aws-cdk-lib/aws-dynamodb';
+import {Code, Function, Runtime} from 'aws-cdk-lib/aws-lambda';
+import {Vpc} from 'aws-cdk-lib/aws-ec2';
+
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class PtoleInfrastructureStack extends Stack {
-  readonly cluster: DatabaseCluster;
+  readonly itemTypeStore: Table;
   readonly vpc: Vpc;
   readonly apiLambda: Function;
 
@@ -14,17 +15,13 @@ export class PtoleInfrastructureStack extends Stack {
     super(scope, id, props);
 
     this.vpc = new Vpc(this, 'Vpc', {});
-	
-    this.cluster = new DatabaseCluster(this, 'MainStore', {
-		masterUser: {
-			username: 'ptolemaster'
-		},
-		instanceType: InstanceType.of(InstanceClass.MEMORY5, InstanceSize.LARGE),
-		vpcSubnets: {
-			subnetType: SubnetType.PUBLIC
-		},
-		vpc: this.vpc
-    });
+
+	this.itemTypeStore = new Table(this, 'ItemTypeStore', {
+		partitionKey: {
+			name: 'id',
+			type: AttributeType.NUMBER
+		}
+	});
 	
 	this.apiLambda = new Function(this, 'ApiLambda', {
 		runtime: Runtime.NODEJS_12_X,
